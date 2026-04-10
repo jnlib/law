@@ -6,76 +6,68 @@
 <title>법령 검색 — 종로도서관</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0a1929;--primary:#1565c0;--primary-l:#e3f2fd;--bg:#f5f6f8;--surface:#fff;--txt:#1a2a3a;--txt-m:#5a6a7a;--txt-l:#94a4b4;--border:#e0e4ea;--shadow:0 2px 8px rgba(0,0,0,.05);--green:#2e7d32;--red:#c62828;--yellow:#f9a825;--radius:12px}
+:root{--navy:#0a1929;--primary:#1565c0;--primary-l:#e3f2fd;--bg:#f5f6f8;--surface:#fff;--txt:#1a2a3a;--txt-m:#5a6a7a;--txt-l:#94a4b4;--border:#e0e4ea;--shadow:0 2px 8px rgba(0,0,0,.05);--radius:12px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--txt)}
 
-.hdr{background:var(--navy);padding:20px 24px 60px}
+.hdr{background:var(--navy);padding:24px 24px 64px}
 .hdr-inner{max-width:800px;margin:0 auto}
 .hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:24px}
 .hdr-top img{height:18px;filter:brightness(10)}
-.hdr-top span{color:#fff;font-size:15px;font-weight:700}
-.hdr-top a{color:rgba(255,255,255,.6);font-size:12px;text-decoration:none;margin-left:auto}
-
+.hdr-top span{color:#fff;font-size:16px;font-weight:700}
+.hdr-top a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;margin-left:auto}
 .search-box{display:flex;gap:8px;max-width:800px;margin:0 auto}
-.search-box input{flex:1;padding:14px 20px;border:none;border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.15)}
-.search-box input::placeholder{color:var(--txt-l)}
-.search-box input:focus{box-shadow:0 4px 20px rgba(21,101,192,.3)}
-.search-box button{padding:14px 28px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.search-box input{flex:1;padding:16px 22px;border:none;border-radius:14px;font-size:17px;font-family:inherit;outline:none;box-shadow:0 4px 24px rgba(0,0,0,.18)}
+.search-box input:focus{box-shadow:0 4px 24px rgba(21,101,192,.35)}
+.search-box button{padding:16px 32px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
 .search-box button:hover{background:#0d47a1}
 
-.wrap{max-width:800px;margin:-30px auto 0;padding:0 16px 40px;position:relative;z-index:1}
+.wrap{max-width:800px;margin:-34px auto 0;padding:0 16px 40px;position:relative;z-index:1}
 
-/* 필터 */
 .filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.filter-btn{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:var(--txt-m)}
-.filter-btn:hover{border-color:var(--primary);color:var(--primary)}
-.filter-btn.on{background:var(--primary-l);border-color:var(--primary);color:var(--primary)}
+.fbtn{padding:7px 16px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:var(--txt-m)}
+.fbtn:hover{border-color:var(--primary);color:var(--primary)}.fbtn.on{background:var(--primary-l);border-color:var(--primary);color:var(--primary)}
 
-/* 결과 */
-.result-info{font-size:12px;color:var(--txt-l);margin-bottom:12px;padding:0 4px}
+.result-info{font-size:12px;color:var(--txt-l);margin-bottom:12px}
 
+/* 결과 카드 */
 .law-card{background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:8px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;border-left:4px solid transparent}
 .law-card:hover{transform:translateX(4px);border-left-color:var(--primary);box-shadow:0 4px 16px rgba(0,0,0,.08)}
-.law-card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.law-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:var(--primary-l);color:var(--primary)}
-.law-type.act{background:#e8f5e9;color:var(--green)}
-.law-type.decree{background:#fff3e0;color:#ef6c00}
-.law-type.rule{background:#fce4ec;color:#c62828}
-.law-name{font-size:16px;font-weight:900;color:var(--txt)}
-.law-meta{font-size:11px;color:var(--txt-l);display:flex;gap:12px;flex-wrap:wrap}
+.lc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.lc-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.lc-type.법률{background:#e8f5e9;color:#2e7d32}.lc-type.시행령,.lc-type.대통령령{background:#fff3e0;color:#ef6c00}.lc-type.시행규칙,.lc-type.부령{background:#fce4ec;color:#c62828}
+.lc-type.훈령,.lc-type.고시,.lc-type.예규{background:#f3e5f5;color:#7b1fa2}
+.lc-name{font-size:16px;font-weight:900}
+.lc-article{font-size:13px;font-weight:700;color:var(--primary);margin-top:2px}
+.lc-content{font-size:13px;color:var(--txt-m);line-height:1.7;margin-top:6px;max-height:80px;overflow:hidden;position:relative}
+.lc-content::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(transparent,var(--surface))}
+.lc-meta{font-size:11px;color:var(--txt-l);margin-top:8px;display:flex;gap:12px;flex-wrap:wrap}
 
-/* 상세 */
-.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.detail-panel{background:var(--surface);border-radius:16px;max-width:800px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:28px}
-.detail-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt-l);padding:0 4px}
-.detail-title{font-size:22px;font-weight:900;margin-bottom:8px}
-.detail-meta{font-size:12px;color:var(--txt-m);line-height:1.8;margin-bottom:16px}
-.detail-section{margin-bottom:16px}
-.detail-section h3{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--primary-l)}
-.detail-section p,.detail-section div{font-size:13px;line-height:1.8;color:var(--txt-m)}
-.jomun-item{padding:8px 12px;border-radius:8px;margin-bottom:4px}
-.jomun-item:hover{background:var(--bg)}
-.jomun-title{font-weight:700;color:var(--txt)}
-.jomun-content{color:var(--txt-m);font-size:12px;margin-top:2px;line-height:1.7}
-.link-btn{display:inline-block;padding:8px 16px;background:var(--primary);color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-top:8px}
-.link-btn:hover{background:#0d47a1}
+/* 상세 팝업 */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.detail{background:var(--surface);border-radius:16px;max-width:800px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:28px;position:relative}
+.detail-close{position:absolute;top:16px;right:16px;background:var(--bg);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.detail h2{font-size:20px;font-weight:900;margin-bottom:4px;padding-right:40px}
+.detail-sub{font-size:12px;color:var(--txt-m);line-height:1.8;margin-bottom:16px}
+.detail-article{padding:12px 16px;background:var(--bg);border-radius:10px;margin-bottom:8px;border-left:3px solid var(--primary)}
+.detail-article-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:4px}
+.detail-article-content{font-size:13px;line-height:1.8;color:var(--txt-m);white-space:pre-wrap}
+.detail-link{display:inline-block;padding:10px 20px;background:var(--primary);color:#fff;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-top:12px}
 
 /* 페이징 */
 .paging{display:flex;justify-content:center;gap:6px;margin-top:20px}
-.paging button{padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px}
-.paging button:hover{background:var(--bg)}
+.paging button{padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px}
 .paging button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 
-/* 빈 상태 */
 .empty{text-align:center;padding:60px 20px;color:var(--txt-l)}
-.empty-icon{font-size:48px;margin-bottom:12px}
-.empty-text{font-size:14px;line-height:1.8}
-.examples{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
-.examples a{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:20px;text-decoration:none;font-size:12px;color:var(--txt-m);font-weight:500}
+.empty-icon{font-size:52px;margin-bottom:12px}
+.empty-text{font-size:15px;line-height:1.8}
+.examples{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.examples a{padding:8px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;text-decoration:none;font-size:13px;color:var(--txt-m);font-weight:500;transition:.15s}
 .examples a:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-l)}
-
-.loading{text-align:center;padding:40px;color:var(--txt-l);font-size:14px}
+.loading{text-align:center;padding:40px;color:var(--txt-l)}
+mark{background:#fff176;padding:0 2px;border-radius:2px}
+@media(max-width:600px){.search-box input{font-size:15px;padding:14px 16px}.search-box button{padding:14px 20px;font-size:14px}}
 </style>
 </head>
 <body>
@@ -85,139 +77,132 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--txt)
     <div class="hdr-top">
       <img src="https://jnlib.sen.go.kr/resources/homepage/jnlib/img/jnlib_logo.png" alt="">
       <span>법령 검색</span>
-      <a href="https://www.law.go.kr" target="_blank">법제처 국가법령정보센터 &rarr;</a>
+      <a href="https://www.law.go.kr" target="_blank">국가법령정보센터 →</a>
     </div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="법령명, 키워드로 검색 (예: 도서관법, 저작권, 개인정보보호)" onkeydown="if(event.key==='Enter')doSearch()">
+      <input type="text" id="q" placeholder="법령명, 키워드, 상황을 자유롭게 검색하세요" onkeydown="if(event.key==='Enter')doSearch()">
       <button onclick="doSearch()">검색</button>
     </div>
   </div>
 </div>
 
 <div class="wrap">
-  <!-- 필터 -->
   <div class="filters">
-    <button class="filter-btn on" data-t="law" onclick="setFilter('law',this)">법령</button>
-    <button class="filter-btn" data-t="admrul" onclick="setFilter('admrul',this)">행정규칙</button>
-    <button class="filter-btn" data-t="ordin" onclick="setFilter('ordin',this)">자치법규</button>
-    <button class="filter-btn" data-t="prec" onclick="setFilter('prec',this)">판례</button>
+    <button class="fbtn on" data-s="0" onclick="setFilter(0,this)">📜 법령 조문</button>
+    <button class="fbtn" data-s="1" onclick="setFilter(1,this)">📋 법령 별표·서식</button>
+    <button class="fbtn" data-s="2" onclick="setFilter(2,this)">📝 행정규칙 조문</button>
+    <button class="fbtn" data-s="3" onclick="setFilter(3,this)">📄 행정규칙 별표·서식</button>
   </div>
-
-  <div id="resultInfo" class="result-info"></div>
+  <div id="info" class="result-info"></div>
   <div id="results">
     <div class="empty">
-      <div class="empty-icon">&#9878;</div>
-      <div class="empty-text">법령명이나 키워드를 입력하면<br>국가법령정보센터에서 검색합니다.</div>
+      <div class="empty-icon">⚖️</div>
+      <div class="empty-text">법령명이나 궁금한 상황을 입력하면<br><b>법제처 지능형 검색</b>이 관련 법 조문을 찾아드려요.</div>
       <div class="examples">
-        <a href="#" onclick="quickSearch('도서관법')">도서관법</a>
-        <a href="#" onclick="quickSearch('저작권법')">저작권법</a>
-        <a href="#" onclick="quickSearch('개인정보보호법')">개인정보</a>
-        <a href="#" onclick="quickSearch('국민신문고')">국민신문고</a>
-        <a href="#" onclick="quickSearch('공공기관 에너지')">에너지</a>
-        <a href="#" onclick="quickSearch('청소년 독서')">청소년 독서</a>
+        <a href="#" onclick="return qk('도서관')">도서관</a>
+        <a href="#" onclick="return qk('저작권 침해')">저작권 침해</a>
+        <a href="#" onclick="return qk('개인정보 유출')">개인정보 유출</a>
+        <a href="#" onclick="return qk('공무원 복무')">공무원 복무</a>
+        <a href="#" onclick="return qk('에너지 절약')">에너지 절약</a>
+        <a href="#" onclick="return qk('장애인 편의시설')">장애인 편의시설</a>
+        <a href="#" onclick="return qk('도서관 사서 자격')">사서 자격</a>
       </div>
     </div>
   </div>
   <div id="paging" class="paging"></div>
 </div>
 
-<!-- 상세 팝업 -->
-<div id="detailOverlay" style="display:none"></div>
+<div id="overlay" style="display:none"></div>
 
 <script>
-var WORKER = 'https://law-worker.hdh1231.workers.dev';
-var LAW_DIRECT = 'https://www.law.go.kr/DRF';
+var API = 'https://www.law.go.kr/DRF/lawSearch.do';
 var OC = 'hdh1231';
-var TARGET = 'law';
-var QUERY = '';
-var PAGE = 1;
-var DISPLAY = 20;
+var SEARCH = 0; // 0=법령조문, 1=별표서식, 2=행정규칙조문, 3=행정규칙별표
+var QUERY = '', PAGE = 1, DISPLAY = 20;
 
-function setFilter(t, el) {
-  TARGET = t;
-  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.toggle('on', b.dataset.t === t); });
+function setFilter(s, el) {
+  SEARCH = s;
+  document.querySelectorAll('.fbtn').forEach(function(b) { b.classList.toggle('on', parseInt(b.dataset.s) === s); });
   if (QUERY) doSearch();
 }
-
-function quickSearch(q) {
-  document.getElementById('searchInput').value = q;
-  QUERY = q;
-  PAGE = 1;
-  doSearch();
-  return false;
-}
+function qk(q) { document.getElementById('q').value = q; doSearch(); return false; }
 
 async function doSearch() {
-  var q = document.getElementById('searchInput').value.trim();
+  var q = document.getElementById('q').value.trim();
   if (!q) return;
   QUERY = q;
-
   var el = document.getElementById('results');
-  el.innerHTML = '<div class="loading">🔍 검색 중...</div>';
-  document.getElementById('resultInfo').textContent = '';
+  el.innerHTML = '<div class="loading">🔍 지능형 검색 중...</div>';
+  document.getElementById('info').textContent = '';
   document.getElementById('paging').innerHTML = '';
 
   try {
-    // 브라우저에서 법제처 API 직접 호출 (Cloudflare Worker는 SSL 이슈)
-    // CORS 안 되면 Worker 프록시로 fallback
-    var d;
-    try {
-      var directUrl = LAW_DIRECT + '/lawSearch.do?OC=' + OC + '&target=' + TARGET + '&type=XML&query=' + encodeURIComponent(QUERY) + '&page=' + PAGE + '&display=' + DISPLAY;
-      var r = await fetch(directUrl);
-      var xml = await r.text();
-      d = parseSearchXML(xml, TARGET);
-    } catch(corsErr) {
-      // CORS 차단 시 Worker 프록시 시도
-      try {
-        var r2 = await fetch(WORKER + '/search?query=' + encodeURIComponent(QUERY) + '&target=' + TARGET + '&page=' + PAGE + '&display=' + DISPLAY);
-        d = await r2.json();
-      } catch(e2) {
-        d = { error: '법제처 API 연결 실패. CORS 차단일 수 있어요.' };
-      }
-    }
+    var url = API + '?OC=' + OC + '&target=aiSearch&type=JSON&search=' + SEARCH + '&query=' + encodeURIComponent(QUERY) + '&display=' + DISPLAY + '&page=' + PAGE;
+    var r = await fetch(url);
+    var text = await r.text();
 
-    if (d.error) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">' + d.error + '</div></div>';
+    if (text.includes('<!DOCTYPE') || text.includes('error')) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">API 연결 오류<br>잠시 후 다시 시도해주세요.</div></div>';
       return;
     }
 
-    if (!d.items || d.items.length === 0) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">검색 결과가 없습니다.<br>"' + esc(QUERY) + '"에 해당하는 ' + targetName(TARGET) + '을 찾지 못했어요.</div></div>';
+    var d = JSON.parse(text);
+    var ai = d.aiSearch || d;
+    var count = parseInt(ai['검색결과개수'] || '0');
+
+    // 검색 유형별 결과 추출
+    var items = [];
+    if (SEARCH === 0) items = ai['법령조문'] || [];
+    else if (SEARCH === 1) items = ai['법령별표서식'] || [];
+    else if (SEARCH === 2) items = ai['행정규칙조문'] || [];
+    else if (SEARCH === 3) items = ai['행정규칙별표서식'] || [];
+    if (!Array.isArray(items)) items = [items]; // 단건이면 배열로
+
+    var filterNames = ['법령 조문', '법령 별표·서식', '행정규칙 조문', '행정규칙 별표·서식'];
+    document.getElementById('info').textContent = '"' + QUERY + '" · ' + filterNames[SEARCH] + ' · ' + count + '건';
+
+    if (!items.length || count === 0) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">"' + esc(QUERY) + '" 검색 결과가 없어요.<br>다른 키워드로 시도해보세요.</div></div>';
       return;
     }
-
-    document.getElementById('resultInfo').textContent = '총 ' + d.totalCount.toLocaleString() + '건 · ' + targetName(TARGET) + ' · ' + PAGE + '페이지';
 
     var html = '';
-    d.items.forEach(function(item) {
-      var typeCls = typeClass(item.type);
-      var typeLabel = item.type || targetName(TARGET);
-      html += '<div class="law-card" onclick="openDetail(\'' + esc(item.id) + '\',\'' + TARGET + '\')">'
-        + '<div class="law-card-top">'
-        + '<span class="law-type ' + typeCls + '">' + esc(typeLabel) + '</span>'
-        + '<span class="law-name">' + esc(item.name || item.fullName || '제목 없음') + '</span>'
+    items.forEach(function(item) {
+      var lawName = item['법령명'] || item['행정규칙명'] || '';
+      var typeName = item['법령종류명'] || item['행정규칙종류명'] || '';
+      var articleTitle = item['조문제목'] || item['별표서식제목'] || '';
+      var articleNo = item['조문번호'] || item['별표서식번호'] || '';
+      var content = item['조문내용'] || '';
+      var ministry = item['소관부처명'] || item['발령기관명'] || '';
+      var enforceDate = item['시행일자'] || item['발령일자'] || '';
+      var lawId = item['법령일련번호'] || item['행정규칙일련번호'] || '';
+
+      // 본문에서 검색어 하이라이트
+      var hlContent = highlightQuery(content, QUERY);
+
+      html += '<div class="law-card" onclick="openDetail(this)" data-law=\'' + esc(JSON.stringify(item)) + '\'>'
+        + '<div class="lc-top">'
+        + (typeName ? '<span class="lc-type ' + esc(typeName) + '">' + esc(typeName) + '</span>' : '')
+        + '<span class="lc-name">' + esc(lawName) + '</span>'
         + '</div>'
-        + '<div class="law-meta">'
-        + (item.promulgateDate ? '<span>📅 ' + formatDate(item.promulgateDate) + '</span>' : '')
-        + (item.enforceDate ? '<span>▶ 시행 ' + formatDate(item.enforceDate) + '</span>' : '')
-        + (item.ministry ? '<span>🏛 ' + esc(item.ministry) + '</span>' : '')
-        + (item.promulgateNo ? '<span>#' + esc(item.promulgateNo) + '</span>' : '')
+        + (articleTitle || articleNo ? '<div class="lc-article">제' + articleNo.replace(/^0+/, '') + '조 ' + esc(articleTitle) + '</div>' : '')
+        + (content ? '<div class="lc-content">' + hlContent + '</div>' : '')
+        + '<div class="lc-meta">'
+        + (ministry ? '<span>🏛 ' + esc(ministry) + '</span>' : '')
+        + (enforceDate ? '<span>▶ ' + fmtDate(enforceDate) + '</span>' : '')
         + '</div></div>';
     });
     el.innerHTML = html;
 
     // 페이징
-    var totalPages = Math.ceil(d.totalCount / DISPLAY);
+    var totalPages = Math.ceil(count / DISPLAY);
     if (totalPages > 1) {
-      var pgHtml = '';
-      if (PAGE > 1) pgHtml += '<button onclick="goPage(' + (PAGE - 1) + ')">◀</button>';
-      var start = Math.max(1, PAGE - 4);
-      var end = Math.min(totalPages, start + 9);
-      for (var p = start; p <= end; p++) {
-        pgHtml += '<button class="' + (p === PAGE ? 'on' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
-      }
-      if (PAGE < totalPages) pgHtml += '<button onclick="goPage(' + (PAGE + 1) + ')">▶</button>';
-      document.getElementById('paging').innerHTML = pgHtml;
+      var pg = '';
+      if (PAGE > 1) pg += '<button onclick="goPage(' + (PAGE - 1) + ')">◀</button>';
+      var s = Math.max(1, PAGE - 4), e = Math.min(totalPages, s + 9);
+      for (var p = s; p <= e; p++) pg += '<button class="' + (p === PAGE ? 'on' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+      if (PAGE < totalPages) pg += '<button onclick="goPage(' + (PAGE + 1) + ')">▶</button>';
+      document.getElementById('paging').innerHTML = pg;
     }
 
   } catch(e) {
@@ -227,142 +212,64 @@ async function doSearch() {
 
 function goPage(p) { PAGE = p; doSearch(); window.scrollTo(0, 0); }
 
-async function openDetail(id, target) {
-  var overlay = document.getElementById('detailOverlay');
+function openDetail(cardEl) {
+  var item;
+  try { item = JSON.parse(cardEl.dataset.law); } catch(e) { return; }
+
+  var lawName = item['법령명'] || item['행정규칙명'] || '';
+  var typeName = item['법령종류명'] || item['행정규칙종류명'] || '';
+  var articleTitle = item['조문제목'] || item['별표서식제목'] || '';
+  var articleNo = item['조문번호'] || item['별표서식번호'] || '';
+  var content = item['조문내용'] || '';
+  var ministry = item['소관부처명'] || item['발령기관명'] || '';
+  var enforceDate = item['시행일자'] || item['발령일자'] || '';
+  var promDate = item['공포일자'] || '';
+  var promNo = item['공포번호'] || item['발령번호'] || '';
+  var revision = item['제개정구분명'] || '';
+
+  var overlay = document.getElementById('overlay');
   overlay.style.display = 'flex';
-  overlay.innerHTML = '<div class="detail-panel"><div class="loading">📖 법령 내용 불러오는 중...</div></div>';
 
-  try {
-    var d;
-    try {
-      var dUrl = LAW_DIRECT + '/lawService.do?OC=' + OC + '&target=' + target + '&type=XML&ID=' + encodeURIComponent(id);
-      var r = await fetch(dUrl);
-      var xml = await r.text();
-      if (xml.includes('<!DOCTYPE') || !xml.includes('<?xml')) {
-        d = { error: 'API 미신청 또는 상세 조회 불가' };
-      } else {
-        d = {
-          id: extractTag(xml, '법령일련번호'),
-          name: extractTag(xml, '법령명약칭') || extractTag(xml, '법령명'),
-          fullName: extractTag(xml, '법령명'),
-          type: extractTag(xml, '법령구분'),
-          promulgateDate: extractTag(xml, '공포일자'),
-          enforceDate: extractTag(xml, '시행일자'),
-          ministry: extractTag(xml, '소관부처명') || extractTag(xml, '소관부처'),
-          purpose: extractTag(xml, '제정이유') || extractTag(xml, '제개정이유'),
-          xml: xml,
-        };
-      }
-    } catch(e) {
-      try { var r2 = await fetch(WORKER + '/detail?id=' + encodeURIComponent(id) + '&target=' + target); d = await r2.json(); } catch(e2) { d = { error: '상세 조회 실패' }; }
-    }
+  overlay.innerHTML = '<div class="detail">'
+    + '<button class="detail-close" onclick="closeDetail()">✕</button>'
+    + '<h2>' + esc(lawName) + '</h2>'
+    + '<div class="detail-sub">'
+    + (typeName ? '<b>' + esc(typeName) + '</b> · ' : '')
+    + (revision ? esc(revision) + ' · ' : '')
+    + (ministry ? '소관 ' + esc(ministry) + ' · ' : '')
+    + (promDate ? '공포 ' + fmtDate(promDate) : '')
+    + (promNo ? ' 제' + esc(promNo) + '호 · ' : '')
+    + (enforceDate ? '시행 ' + fmtDate(enforceDate) : '')
+    + '</div>'
+    + '<div class="detail-article">'
+    + '<div class="detail-article-title">제' + (articleNo || '').replace(/^0+/, '') + '조' + (articleTitle ? ' (' + esc(articleTitle) + ')' : '') + '</div>'
+    + '<div class="detail-article-content">' + highlightQuery(content, QUERY) + '</div>'
+    + '</div>'
+    + '<a class="detail-link" href="https://www.law.go.kr/법령/' + encodeURIComponent(lawName) + '" target="_blank">법제처에서 전체 법령 보기 →</a>'
+    + '</div>';
 
-    if (d.error) {
-      overlay.innerHTML = '<div class="detail-panel"><button class="detail-close" onclick="closeDetail()">✕</button><div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">' + d.error + '</div></div></div>';
-      return;
-    }
-
-    var html = '<div class="detail-panel">';
-    html += '<button class="detail-close" onclick="closeDetail()">✕</button>';
-    html += '<div class="detail-title">' + esc(d.fullName || d.name || '법령') + '</div>';
-    html += '<div class="detail-meta">';
-    if (d.type) html += '<b>' + esc(d.type) + '</b> · ';
-    if (d.promulgateDate) html += '공포 ' + formatDate(d.promulgateDate) + ' · ';
-    if (d.enforceDate) html += '시행 ' + formatDate(d.enforceDate) + ' · ';
-    if (d.ministry) html += '소관 ' + esc(d.ministry);
-    html += '</div>';
-
-    if (d.purpose) {
-      html += '<div class="detail-section"><h3>제개정 이유</h3><p>' + esc(d.purpose).replace(/\n/g, '<br>') + '</p></div>';
-    }
-
-    // 조문 파싱 (XML에서 추출)
-    if (d.xml) {
-      var articles = parseArticles(d.xml);
-      if (articles.length > 0) {
-        html += '<div class="detail-section"><h3>조문 (' + articles.length + '개)</h3>';
-        articles.forEach(function(a) {
-          html += '<div class="jomun-item"><div class="jomun-title">' + esc(a.title) + '</div>';
-          if (a.content) html += '<div class="jomun-content">' + esc(a.content).replace(/\n/g, '<br>') + '</div>';
-          html += '</div>';
-        });
-        html += '</div>';
-      }
-    }
-
-    html += '<a class="link-btn" href="https://www.law.go.kr/법령/' + encodeURIComponent(d.fullName || d.name || '') + '" target="_blank">법제처에서 원문 보기 →</a>';
-    html += '</div>';
-
-    overlay.innerHTML = html;
-
-  } catch(e) {
-    overlay.innerHTML = '<div class="detail-panel"><button class="detail-close" onclick="closeDetail()">✕</button><div class="empty">상세 조회 실패: ' + e.message + '</div></div>';
-  }
+  overlay.onclick = function(e) { if (e.target === overlay) closeDetail(); };
 }
 
-function closeDetail() { document.getElementById('detailOverlay').style.display = 'none'; }
-
-// 조문 파싱
-function parseArticles(xml) {
-  var articles = [];
-  var regex = /<조문단위>([\s\S]*?)<\/조문단위>/gi;
-  var match;
-  while ((match = regex.exec(xml)) !== null) {
-    var chunk = match[1];
-    var title = extractTag(chunk, '조문제목') || extractTag(chunk, '조문여부') || '';
-    var content = extractTag(chunk, '조문내용') || '';
-    if (title || content) articles.push({ title: title, content: content });
-  }
-  return articles;
-}
-
-function extractTag(xml, tag) {
-  var regex = new RegExp('<' + tag + '>(?:\\s*<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>\\s*)?<\\/' + tag + '>', 'i');
-  var m = xml.match(regex);
-  return m ? m[1].trim() : null;
-}
-
-// XML 파싱 (클라이언트용)
-function parseSearchXML(xml, target) {
-  if (xml.includes('<!DOCTYPE') || xml.includes('error500') || xml.includes('OPEN API')) {
-    return { error: 'API 미신청 상태입니다. open.law.go.kr → OPEN API → OPEN API 신청에서 법령종류를 체크해주세요.' };
-  }
-  var totalCount = extractTag(xml, 'totalCnt') || extractTag(xml, 'totalcount') || '0';
-  var items = [];
-  // 여러 가능한 태그명
-  var tags = ['law', 'admrul', 'ordin', 'prec'];
-  for (var ti = 0; ti < tags.length; ti++) {
-    var tg = tags[ti];
-    var regex = new RegExp('<' + tg + '>([\\s\\S]*?)<\\/' + tg + '>', 'gi');
-    var match;
-    while ((match = regex.exec(xml)) !== null) {
-      var c = match[1];
-      items.push({
-        id: extractTag(c, '법령일련번호') || extractTag(c, 'ID') || extractTag(c, '판례일련번호'),
-        name: extractTag(c, '법령명약칭') || extractTag(c, '법령명') || extractTag(c, '행정규칙명') || extractTag(c, '사건명') || extractTag(c, '자치법규명'),
-        fullName: extractTag(c, '법령명'),
-        type: extractTag(c, '법령구분') || extractTag(c, '행정규칙종류') || target,
-        promulgateDate: extractTag(c, '공포일자') || extractTag(c, '시행일자') || extractTag(c, '선고일자'),
-        promulgateNo: extractTag(c, '공포번호') || extractTag(c, '사건번호'),
-        enforceDate: extractTag(c, '시행일자'),
-        ministry: extractTag(c, '소관부처') || extractTag(c, '소관부처명'),
-        link: extractTag(c, '법령상세링크'),
-      });
-    }
-  }
-  return { totalCount: parseInt(totalCount), page: PAGE, items: items };
-}
+function closeDetail() { document.getElementById('overlay').style.display = 'none'; }
 
 // 헬퍼
-function esc(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function formatDate(d) { if (!d || d.length < 8) return d || ''; return d.slice(0, 4) + '.' + d.slice(4, 6) + '.' + d.slice(6, 8); }
-function targetName(t) { return { law: '법령', admrul: '행정규칙', ordin: '자치법규', prec: '판례' }[t] || t; }
-function typeClass(t) {
-  if (!t) return '';
-  if (t.indexOf('법률') >= 0) return 'act';
-  if (t.indexOf('대통령령') >= 0 || t.indexOf('시행령') >= 0) return 'decree';
-  if (t.indexOf('규칙') >= 0 || t.indexOf('훈령') >= 0 || t.indexOf('고시') >= 0) return 'rule';
-  return '';
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function fmtDate(d) {
+  if (!d) return '';
+  var s = String(d).replace(/\D/g, '');
+  if (s.length >= 8) return s.slice(0, 4) + '.' + s.slice(4, 6) + '.' + s.slice(6, 8);
+  return d;
+}
+function highlightQuery(text, query) {
+  if (!text || !query) return esc(text);
+  var escaped = esc(text);
+  var words = query.split(/\s+/).filter(function(w) { return w.length > 0; });
+  words.forEach(function(w) {
+    var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    escaped = escaped.replace(re, '<mark>$1</mark>');
+  });
+  return escaped;
 }
 </script>
 </body>
