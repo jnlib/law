@@ -3,88 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>법령 검색 — 종로도서관</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<title>AI 법령 검색 — 종로도서관</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0a1929;--primary:#1565c0;--primary-l:#e3f2fd;--bg:#f5f6f8;--surface:#fff;--txt:#1a2a3a;--txt-m:#5a6a7a;--txt-l:#94a4b4;--border:#e0e4ea;--shadow:0 2px 8px rgba(0,0,0,.05);--radius:12px}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--txt)}
+:root {
+  --navy: #0f172a;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --txt-main: #1e293b;
+  --txt-muted: #64748b;
+  --txt-light: #94a3b8;
+  --border: #e2e8f0;
+  --shadow: 0 4px 12px -2px rgba(0,0,0,0.05), 0 2px 6px -1px rgba(0,0,0,0.03);
+  --radius: 16px;
+}
 
-.hdr{background:var(--navy);padding:24px 24px 64px}
-.hdr-inner{max-width:800px;margin:0 auto}
-.hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.hdr-top img{height:18px;filter:brightness(10)}
-.hdr-top span{color:#fff;font-size:16px;font-weight:700}
-.hdr-top a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;margin-left:auto}
-.search-box{display:flex;gap:8px;max-width:800px;margin:0 auto}
-.search-box input{flex:1;padding:16px 22px;border:none;border-radius:14px;font-size:17px;font-family:inherit;outline:none;box-shadow:0 4px 24px rgba(0,0,0,.18)}
-.search-box input:focus{box-shadow:0 4px 24px rgba(21,101,192,.35)}
-.search-box button{padding:16px 32px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
-.search-box button:hover{background:#0d47a1}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background-color: var(--bg);
+  color: var(--txt-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
 
-.wrap{max-width:800px;margin:-34px auto 0;padding:0 16px 40px;position:relative;z-index:1}
+/* Header */
+.hdr {
+  background: var(--navy);
+  background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+  padding: 48px 24px 80px;
+  text-align: center;
+}
+.hdr-inner { max-width: 800px; margin: 0 auto; }
+.hdr-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.hdr-logo img { height: 24px; filter: brightness(0) invert(1); }
+.hdr-logo span { color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
 
-.filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.fbtn{padding:7px 16px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:var(--txt-m)}
-.fbtn:hover{border-color:var(--primary);color:var(--primary)}.fbtn.on{background:var(--primary-l);border-color:var(--primary);color:var(--primary)}
+.search-container {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.search-box {
+  display: flex;
+  background: #fff;
+  padding: 8px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+.search-box:focus-within { transform: translateY(-2px); }
+.search-box input {
+  flex: 1;
+  border: none;
+  padding: 16px 24px;
+  font-size: 17px;
+  font-family: inherit;
+  outline: none;
+  border-radius: 12px;
+}
+.search-box button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0 32px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.search-box button:hover { background: var(--primary-hover); }
 
-.result-info{font-size:12px;color:var(--txt-l);margin-bottom:12px}
+/* Main Content */
+.wrap {
+  max-width: 850px;
+  margin: -40px auto 60px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
 
-/* 결과 카드 */
-.law-card{background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:8px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;border-left:4px solid transparent}
-.law-card:hover{transform:translateX(4px);border-left-color:var(--primary);box-shadow:0 4px 16px rgba(0,0,0,.08)}
-.lc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.lc-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.lc-type.법률{background:#e8f5e9;color:#2e7d32}.lc-type.시행령,.lc-type.대통령령{background:#fff3e0;color:#ef6c00}.lc-type.시행규칙,.lc-type.부령{background:#fce4ec;color:#c62828}
-.lc-type.훈령,.lc-type.고시,.lc-type.예규{background:#f3e5f5;color:#7b1fa2}
-.lc-name{font-size:16px;font-weight:900}
-.lc-article{font-size:13px;font-weight:700;color:var(--primary);margin-top:2px}
-.lc-content{font-size:13px;color:var(--txt-m);line-height:1.7;margin-top:6px;max-height:80px;overflow:hidden;position:relative}
-.lc-content::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(transparent,var(--surface))}
-.lc-meta{font-size:11px;color:var(--txt-l);margin-top:8px;display:flex;gap:12px;flex-wrap:wrap}
+/* Filters */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+.filters::-webkit-scrollbar { display: none; }
+.fbtn {
+  white-space: nowrap;
+  padding: 10px 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+}
+.fbtn.on {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.fbtn:hover:not(.on) { border-color: var(--primary); color: var(--primary); }
 
-/* 상세 팝업 */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
-.detail{background:var(--surface);border-radius:16px;max-width:800px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:28px;position:relative}
-.detail-close{position:absolute;top:16px;right:16px;background:var(--bg);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.detail h2{font-size:20px;font-weight:900;margin-bottom:4px;padding-right:40px}
-.detail-sub{font-size:12px;color:var(--txt-m);line-height:1.8;margin-bottom:16px}
-.detail-article{padding:12px 16px;background:var(--bg);border-radius:10px;margin-bottom:8px;border-left:3px solid var(--primary)}
-.detail-article-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:4px}
-.detail-article-content{font-size:13px;line-height:1.8;color:var(--txt-m);white-space:pre-wrap}
-.detail-link{display:inline-block;padding:10px 20px;background:var(--primary);color:#fff;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-top:12px}
+.result-info { font-size: 13px; color: var(--txt-light); margin-bottom: 16px; padding-left: 8px; }
 
-/* 페이징 */
-.paging{display:flex;justify-content:center;gap:6px;margin-top:20px}
-.paging button{padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px}
-.paging button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+/* Result Cards */
+.law-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.law-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 12px 24px -8px rgba(37, 99, 235, 0.15);
+}
+.lc-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.badge-law { background: #dcfce7; color: #166534; }
+.badge-reg { background: #fef9c3; color: #854d0e; }
+.badge-rule { background: #fee2e2; color: #991b1b; }
 
-.empty{text-align:center;padding:60px 20px;color:var(--txt-l)}
-.empty-icon{font-size:52px;margin-bottom:12px}
-.empty-text{font-size:15px;line-height:1.8}
-.examples{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px}
-.examples a{padding:8px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;text-decoration:none;font-size:13px;color:var(--txt-m);font-weight:500;transition:.15s}
-.examples a:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-l)}
-.loading{text-align:center;padding:40px;color:var(--txt-l)}
-mark{background:#fff176;padding:0 2px;border-radius:2px}
-@media(max-width:600px){.search-box input{font-size:15px;padding:14px 16px}.search-box button{padding:14px 20px;font-size:14px}}
+.lc-name { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 8px; display: block; }
+.lc-article { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.lc-content {
+  font-size: 14px;
+  color: var(--txt-muted);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.7;
+}
+.lc-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--txt-light);
+}
+
+/* Detail Modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal {
+  background: #fff;
+  width: 100%;
+  max-width: 750px;
+  max-height: 90vh;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 10;
+}
+.modal-body {
+  padding: 40px;
+  overflow-y: auto;
+}
+.modal-title { font-size: 24px; font-weight: 900; color: var(--navy); margin-bottom: 12px; }
+.modal-meta {
+  font-size: 13px;
+  color: var(--txt-muted);
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.modal-content-box {
+  background: var(--bg);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+.modal-article-title { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.modal-text { font-size: 15px; line-height: 1.8; white-space: pre-wrap; color: var(--txt-main); }
+
+.modal-footer {
+  padding: 24px 40px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+.btn {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+  flex: 1;
+  text-align: center;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-outline { border: 1.5px solid var(--border); color: var(--txt-muted); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Paging */
+.paging { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+.paging button {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.paging button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* Empty/Loading */
+.status-box { text-align: center; padding: 60px 0; color: var(--txt-light); }
+.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+mark { background: #fef08a; padding: 0 2px; }
+
+@media (max-width: 600px) {
+  .hdr { padding: 32px 16px 60px; }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; flex-direction: column; }
+}
 </style>
 </head>
 <body>
 
-<div class="hdr">
+<header class="hdr">
   <div class="hdr-inner">
-    <div class="hdr-top">
-      <img src="https://jnlib.sen.go.kr/resources/homepage/jnlib/img/jnlib_logo.png" alt="">
-      <span>법령 검색</span>
-      <a href="https://www.law.go.kr" target="_blank">국가법령정보센터 →</a>
+    <div class="hdr-logo">
+      <img src="https://jnlib.sen.go.kr/resources/homepage/jnlib/img/jnlib_logo.png" alt="Library Logo">
+      <span>AI 법령 검색</span>
     </div>
-    <div class="search-box">
-      <input type="text" id="q" placeholder="법령명, 키워드, 상황을 자유롭게 검색하세요" onkeydown="if(event.key==='Enter')doSearch()">
-      <button onclick="doSearch()">검색</button>
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="q" placeholder="궁금한 법령이나 상황을 입력하세요" onkeydown="if(event.key==='Enter')doSearch()">
+        <button onclick="doSearch()">검색</button>
+      </div>
     </div>
   </div>
-</div>
+</header>
 
 <div class="wrap">
   <div class="filters">
@@ -93,184 +318,175 @@ mark{background:#fff176;padding:0 2px;border-radius:2px}
     <button class="fbtn" data-s="2" onclick="setFilter(2,this)">📝 행정규칙 조문</button>
     <button class="fbtn" data-s="3" onclick="setFilter(3,this)">📄 행정규칙 별표·서식</button>
   </div>
+  
   <div id="info" class="result-info"></div>
+  
   <div id="results">
-    <div class="empty">
-      <div class="empty-icon">⚖️</div>
-      <div class="empty-text">법령명이나 궁금한 상황을 입력하면<br><b>법제처 지능형 검색</b>이 관련 법 조문을 찾아드려요.</div>
-      <div class="examples">
-        <a href="#" onclick="return qk('도서관')">도서관</a>
-        <a href="#" onclick="return qk('저작권 침해')">저작권 침해</a>
-        <a href="#" onclick="return qk('개인정보 유출')">개인정보 유출</a>
-        <a href="#" onclick="return qk('공무원 복무')">공무원 복무</a>
-        <a href="#" onclick="return qk('에너지 절약')">에너지 절약</a>
-        <a href="#" onclick="return qk('장애인 편의시설')">장애인 편의시설</a>
-        <a href="#" onclick="return qk('도서관 사서 자격')">사서 자격</a>
-      </div>
+    <div class="status-box">
+      <div style="font-size: 64px; margin-bottom: 24px;">⚖️</div>
+      <p style="font-size: 18px; color: var(--txt-main); font-weight: 700; margin-bottom: 8px;">지능형 법령 검색 시스템</p>
+      <p>단순 검색을 넘어 AI가 가장 연관성 높은 조문을 찾아드려요.</p>
     </div>
   </div>
+  
   <div id="paging" class="paging"></div>
 </div>
 
-<div id="overlay" style="display:none"></div>
+<div id="overlay" class="overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
 
 <script>
-var API = 'https://www.law.go.kr/DRF/lawSearch.do';
-var OC = 'hdh1231';
-var SEARCH = 0; // 0=법령조문, 1=별표서식, 2=행정규칙조문, 3=행정규칙별표
-var QUERY = '', PAGE = 1, DISPLAY = 20;
+// 배포된 Worker 주소를 입력하세요 (또는 배포 후 수정해 드립니다)
+var WORKER_URL = 'https://law-worker.jnlib.workers.dev'; 
+var SEARCH_TYPE = 0; 
+var QUERY = '', PAGE = 1, DISPLAY = 15;
 
 function setFilter(s, el) {
-  SEARCH = s;
-  document.querySelectorAll('.fbtn').forEach(function(b) { b.classList.toggle('on', parseInt(b.dataset.s) === s); });
+  SEARCH_TYPE = s;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.s) === s));
   if (QUERY) doSearch();
 }
-function qk(q) { document.getElementById('q').value = q; doSearch(); return false; }
 
 async function doSearch() {
-  var q = document.getElementById('q').value.trim();
+  const q = document.getElementById('q').value.trim();
   if (!q) return;
   QUERY = q;
-  var el = document.getElementById('results');
-  el.innerHTML = '<div class="loading">🔍 지능형 검색 중...</div>';
+  PAGE = 1;
+  await loadResults();
+}
+
+async function loadResults() {
+  const el = document.getElementById('results');
+  el.innerHTML = '<div class="status-box"><div class="spinner"></div><p>AI가 법령을 분석하여 최적의 결과를 찾는 중입니다...</p></div>';
   document.getElementById('info').textContent = '';
   document.getElementById('paging').innerHTML = '';
 
   try {
-    var url = API + '?OC=' + OC + '&target=aiSearch&type=JSON&search=' + SEARCH + '&query=' + encodeURIComponent(QUERY) + '&display=' + DISPLAY + '&page=' + PAGE;
-    var r = await fetch(url);
-    var text = await r.text();
+    const url = `${WORKER_URL}/search?query=${encodeURIComponent(QUERY)}&search=${SEARCH_TYPE}&display=${DISPLAY}&page=${PAGE}`;
+    const r = await fetch(url);
+    const data = await r.json();
 
-    if (text.includes('<!DOCTYPE') || text.includes('error')) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">API 연결 오류<br>잠시 후 다시 시도해주세요.</div></div>';
+    if (data.error) throw new Error(data.error);
+
+    const ai = data.aiSearch || data;
+    const count = parseInt(ai['검색결과개수'] || '0');
+    const keys = ['법령조문', '법령별표서식', '행정규칙조문', '행정규칙별표서식'];
+    let items = ai[keys[SEARCH_TYPE]] || [];
+    if (!Array.isArray(items)) items = [items];
+
+    const typeNames = ['법령 조문', '법령 별표·서식', '행정규칙 조문', '행정규칙 별표·서식'];
+    document.getElementById('info').textContent = `"${QUERY}" 검색결과 ${count}건 중 ${items.length}건 정렬됨`;
+
+    if (!items.length) {
+      el.innerHTML = '<div class="status-box"><p>검색 결과가 없습니다.</p></div>';
       return;
     }
 
-    var d = JSON.parse(text);
-    var ai = d.aiSearch || d;
-    var count = parseInt(ai['검색결과개수'] || '0');
-
-    // 검색 유형별 결과 추출
-    var items = [];
-    if (SEARCH === 0) items = ai['법령조문'] || [];
-    else if (SEARCH === 1) items = ai['법령별표서식'] || [];
-    else if (SEARCH === 2) items = ai['행정규칙조문'] || [];
-    else if (SEARCH === 3) items = ai['행정규칙별표서식'] || [];
-    if (!Array.isArray(items)) items = [items]; // 단건이면 배열로
-
-    var filterNames = ['법령 조문', '법령 별표·서식', '행정규칙 조문', '행정규칙 별표·서식'];
-    document.getElementById('info').textContent = '"' + QUERY + '" · ' + filterNames[SEARCH] + ' · ' + count + '건';
-
-    if (!items.length || count === 0) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">"' + esc(QUERY) + '" 검색 결과가 없어요.<br>다른 키워드로 시도해보세요.</div></div>';
-      return;
-    }
-
-    var html = '';
-    items.forEach(function(item) {
-      var lawName = item['법령명'] || item['행정규칙명'] || '';
-      var typeName = item['법령종류명'] || item['행정규칙종류명'] || '';
-      var articleTitle = item['조문제목'] || item['별표서식제목'] || '';
-      var articleNo = item['조문번호'] || item['별표서식번호'] || '';
-      var content = item['조문내용'] || '';
-      var ministry = item['소관부처명'] || item['발령기관명'] || '';
-      var enforceDate = item['시행일자'] || item['발령일자'] || '';
-      var lawId = item['법령일련번호'] || item['행정규칙일련번호'] || '';
-
-      // 본문에서 검색어 하이라이트
-      var hlContent = highlightQuery(content, QUERY);
-
-      html += '<div class="law-card" onclick="openDetail(this)" data-law=\'' + esc(JSON.stringify(item)) + '\'>'
-        + '<div class="lc-top">'
-        + (typeName ? '<span class="lc-type ' + esc(typeName) + '">' + esc(typeName) + '</span>' : '')
-        + '<span class="lc-name">' + esc(lawName) + '</span>'
-        + '</div>'
-        + (articleTitle || articleNo ? '<div class="lc-article">제' + articleNo.replace(/^0+/, '') + '조 ' + esc(articleTitle) + '</div>' : '')
-        + (content ? '<div class="lc-content">' + hlContent + '</div>' : '')
-        + '<div class="lc-meta">'
-        + (ministry ? '<span>🏛 ' + esc(ministry) + '</span>' : '')
-        + (enforceDate ? '<span>▶ ' + fmtDate(enforceDate) + '</span>' : '')
-        + '</div></div>';
-    });
-    el.innerHTML = html;
-
-    // 페이징
-    var totalPages = Math.ceil(count / DISPLAY);
-    if (totalPages > 1) {
-      var pg = '';
-      if (PAGE > 1) pg += '<button onclick="goPage(' + (PAGE - 1) + ')">◀</button>';
-      var s = Math.max(1, PAGE - 4), e = Math.min(totalPages, s + 9);
-      for (var p = s; p <= e; p++) pg += '<button class="' + (p === PAGE ? 'on' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
-      if (PAGE < totalPages) pg += '<button onclick="goPage(' + (PAGE + 1) + ')">▶</button>';
-      document.getElementById('paging').innerHTML = pg;
-    }
+    el.innerHTML = items.map(it => renderCard(it)).join('');
+    renderPaging(count);
 
   } catch(e) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">❌</div><div class="empty-text">검색 실패: ' + e.message + '</div></div>';
+    el.innerHTML = `<div class="status-box"><p style="color:red">오류 발생: ${e.message}</p></div>`;
   }
 }
 
-function goPage(p) { PAGE = p; doSearch(); window.scrollTo(0, 0); }
+function renderCard(it) {
+  const name = it.법령명 || it.행정규칙명 || '';
+  const type = it.법령종류명 || it.행정규칙종류명 || '';
+  const articleNo = (it.조문번호 || '').replace(/^0+/, '');
+  const articleTitle = it.조문제목 || it.별표서식제목 || '';
+  const content = it.조문내용 || '';
+  const ministry = it.소관부처명 || it.발령기관명 || '';
+  const date = it.시행일자 || it.발령일자 || '';
+  
+  let badgeClass = 'badge-law';
+  if (type.includes('령')) badgeClass = 'badge-reg';
+  if (type.includes('규칙')) badgeClass = 'badge-rule';
 
-function openDetail(cardEl) {
-  var item;
-  try { item = JSON.parse(cardEl.dataset.law); } catch(e) { return; }
+  return `
+    <div class="law-card" onclick="openDetail(this)" data-it='${JSON.stringify(it).replace(/'/g, "&apos;")}'>
+      <div class="lc-badge ${badgeClass}">${type}</div>
+      <span class="lc-name">${esc(name)}</span>
+      <div class="lc-article">${articleNo ? '제' + articleNo + '조 ' : ''}${esc(articleTitle)}</div>
+      <div class="lc-content">${highlight(content, QUERY)}</div>
+      <div class="lc-footer">
+        <span>🏛 ${esc(ministry)}</span>
+        <span>${fmtDate(date)} 시행</span>
+      </div>
+    </div>
+  `;
+}
 
-  var lawName = item['법령명'] || item['행정규칙명'] || '';
-  var typeName = item['법령종류명'] || item['행정규칙종류명'] || '';
-  var articleTitle = item['조문제목'] || item['별표서식제목'] || '';
-  var articleNo = item['조문번호'] || item['별표서식번호'] || '';
-  var content = item['조문내용'] || '';
-  var ministry = item['소관부처명'] || item['발령기관명'] || '';
-  var enforceDate = item['시행일자'] || item['발령일자'] || '';
-  var promDate = item['공포일자'] || '';
-  var promNo = item['공포번호'] || item['발령번호'] || '';
-  var revision = item['제개정구분명'] || '';
+function renderPaging(count) {
+  const total = Math.ceil(count / DISPLAY);
+  if (total <= 1) return;
+  let html = '';
+  const start = Math.max(1, PAGE - 2);
+  const end = Math.min(total, start + 4);
+  for (let i = start; i <= end; i++) {
+    html += `<button class="${i === PAGE ? 'on' : ''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  document.getElementById('paging').innerHTML = html;
+}
 
-  var overlay = document.getElementById('overlay');
-  overlay.style.display = 'flex';
+function goPage(p) { PAGE = p; loadResults(); window.scrollTo(0,0); }
 
-  overlay.innerHTML = '<div class="detail">'
-    + '<button class="detail-close" onclick="closeDetail()">✕</button>'
-    + '<h2>' + esc(lawName) + '</h2>'
-    + '<div class="detail-sub">'
-    + (typeName ? '<b>' + esc(typeName) + '</b> · ' : '')
-    + (revision ? esc(revision) + ' · ' : '')
-    + (ministry ? '소관 ' + esc(ministry) + ' · ' : '')
-    + (promDate ? '공포 ' + fmtDate(promDate) : '')
-    + (promNo ? ' 제' + esc(promNo) + '호 · ' : '')
-    + (enforceDate ? '시행 ' + fmtDate(enforceDate) : '')
-    + '</div>'
-    + '<div class="detail-article">'
-    + '<div class="detail-article-title">제' + (articleNo || '').replace(/^0+/, '') + '조' + (articleTitle ? ' (' + esc(articleTitle) + ')' : '') + '</div>'
-    + '<div class="detail-article-content">' + highlightQuery(content, QUERY) + '</div>'
-    + '</div>'
-    + '<a class="detail-link" href="https://www.law.go.kr/법령/' + encodeURIComponent(lawName) + '" target="_blank">법제처에서 전체 법령 보기 →</a>'
-    + '</div>';
+function openDetail(card) {
+  const it = JSON.parse(card.dataset.it);
+  const name = it.법령명 || it.행정규칙명 || '';
+  const articleNo = (it.조문번호 || '').replace(/^0+/, '');
+  const articleTitle = it.조문제목 || it.별표서식제목 || '';
+  const content = it.조문내용 || '';
+  const lawId = it.법령일련번호 || it.행정규칙일련번호 || '';
+  
+  // 국법센터 상세 링크 생성
+  const siteUrl = SEARCH_TYPE < 2 
+    ? `https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=${lawId}`
+    : `https://www.law.go.kr/LSW/admRulInfoP.do?admRulSeq=${lawId}`;
 
-  overlay.onclick = function(e) { if (e.target === overlay) closeDetail(); };
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-body">
+      <div class="modal-title">${esc(name)}</div>
+      <div class="modal-meta">
+        <span><b>${it.법령종류명 || it.행정규칙종류명 || ''}</b></span>
+        <span>소관: ${it.소관부처명 || it.발령기관명 || ''}</span>
+        <span>시행일: ${fmtDate(it.시행일자 || it.발령일자)}</span>
+      </div>
+      <div class="modal-content-box">
+        <div class="modal-article-title">${articleNo ? '제' + articleNo + '조 ' : ''}${esc(articleTitle)}</div>
+        <div class="modal-text">${highlight(content, QUERY)}</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="${siteUrl}" target="_blank" class="btn btn-primary">국가법령정보센터에서 보기</a>
+      <button onclick="closeDetail()" class="btn btn-outline">닫기</button>
+    </div>
+  `;
+  document.getElementById('overlay').style.display = 'flex';
 }
 
 function closeDetail() { document.getElementById('overlay').style.display = 'none'; }
-
-// 헬퍼
-function esc(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function esc(s) { return s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''; }
 function fmtDate(d) {
-  if (!d) return '';
-  var s = String(d).replace(/\D/g, '');
-  if (s.length >= 8) return s.slice(0, 4) + '.' + s.slice(4, 6) + '.' + s.slice(6, 8);
-  return d;
+  const s = String(d || '').replace(/\D/g, '');
+  return s.length >= 8 ? `${s.slice(0,4)}.${s.slice(4,6)}.${s.slice(6,8)}` : d;
 }
-function highlightQuery(text, query) {
-  if (!text || !query) return esc(text);
-  var escaped = esc(text);
-  var words = query.split(/\s+/).filter(function(w) { return w.length > 0; });
-  words.forEach(function(w) {
-    var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-    escaped = escaped.replace(re, '<mark>$1</mark>');
+function highlight(txt, q) {
+  if (!txt || !q) return esc(txt);
+  let html = esc(txt);
+  q.split(' ').filter(w => w.length > 1).forEach(w => {
+    const re = new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    html = html.replace(re, '<mark>$1</mark>');
   });
-  return escaped;
+  return html;
 }
+
+// Overlay 클릭 시 닫기
+document.getElementById('overlay').onclick = e => { if (e.target.id === 'overlay') closeDetail(); };
 </script>
 </body>
 </html>

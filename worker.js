@@ -31,7 +31,7 @@ export default {
 
         const qs = new URLSearchParams({
           OC, target: 'aiSearch', type: 'JSON',
-          query, search, display, page
+          query, search, display: '50', page // Fetch slightly more for AI to select from
         });
 
         const r = await fetch(`${LAW_API}?${qs}`, {
@@ -39,17 +39,46 @@ export default {
         });
         const text = await r.text();
 
-        // HTML 에러 페이지 체크
         if (text.includes('<!DOCTYPE') || text.includes('error500')) {
           return json({ error: 'API 오류. 법제처 서버 상태를 확인해주세요.' }, 502);
         }
 
-        // JSON 파싱
         try {
           const data = JSON.parse(text);
+          const aiData = data.aiSearch || data;
+          
+          // 결과 키 추출 (SEARCH 타입에 따라 다름)
+          const keys = ['법령조문', '법령별표서식', '행정규칙조문', '행정규칙별표서식'];
+          let items = aiData[keys[parseInt(search)]] || [];
+          if (!Array.isArray(items)) items = [items];
+          
+          if (items.length > 0 && env.AI) {
+            // AI 재정렬 수행
+            const contexts = items.map(it => {
+              const name = it.법령명 || it.행정규칙명 || '';
+              const title = it.조문제목 || it.별표서식제목 || '';
+              const content = it.조문내용 || '';
+              return `법령명: ${name}\n제목: ${title}\n내용: ${content}`;
+            });
+
+            const { results } = await env.AI.run('@cf/baai/bge-reranker-base', {
+              query,
+              documents: contexts
+            });
+
+            // 점수순 정렬 및 상위 결과 필터링
+            const scoredItems = results.map(res => ({
+              ...items[res.index],
+              _score: res.score
+            })).sort((a, b) => b._score - a._score);
+            
+            // 상위 결과로 교체 (또는 전체 반환)
+            aiData[keys[parseInt(search)]] = scoredItems.slice(0, parseInt(display));
+          }
+
           return json(data);
         } catch(e) {
-          return json({ error: 'JSON 파싱 실패', raw: text.slice(0, 500) }, 502);
+          return json({ error: '데이터 처리 실패', message: e.message }, 502);
         }
       }
 
